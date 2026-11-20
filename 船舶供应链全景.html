@@ -1,0 +1,13 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>船舶产业链全景</title><style>html,body{margin:0;background:#030c15;color:#bfefff;font-family:Arial,'Microsoft YaHei',sans-serif}#status{position:fixed;inset:0;display:grid;place-items:center;text-align:center;font-size:15px}small{display:block;opacity:.65;margin-top:16px;font-size:12px}</style></head><body><div id="status"><div>正在加载船舶产业链全景<small id="p">读取页面资源…</small></div></div><script>
+(async()=>{try{
+const names=["ship-00.txt", "ship-01.txt", "ship-02.txt", "ship-03.txt", "ship-04.txt", "ship-05.txt", "ship-06.txt", "ship-07.txt", "ship-08.txt", "ship-09.txt", "ship-10.txt", "ship-11.txt", "ship-12.txt"];
+let arr=await Promise.all(names.map(n=>fetch('ship-data/'+n).then(r=>{if(!r.ok)throw Error('资源加载失败：'+n+' ('+r.status+')');return r.text()})));
+document.getElementById('p').textContent='正在初始化供应商地图…';
+let v=atob(arr.join(''));
+let bytes=Uint8Array.from(v,c=>c.charCodeAt(0));
+if(typeof DecompressionStream==='undefined')throw Error('请使用最新版 Chrome 或 Edge 浏览器');
+let stream=new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'));
+let doc=await new Response(stream).text();
+document.open();document.write(doc);document.close();
+}catch(e){document.getElementById('status').innerHTML='<div>页面加载失败<small>'+String(e.message||e)+'</small></div>';console.error(e)}})();
+</script></body></html>
